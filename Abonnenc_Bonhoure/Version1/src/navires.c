@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include ""
+#include "../include/grille.h"
 
 /**
  * Abonnenc Bonhoure 
@@ -75,11 +75,26 @@ void insertion(Liste_Navires *l, int ideb, int ifin, int jdeb, int jfin) {
 
 Liste_Navires cree_liste_navires(Grille g, int n) {
 	int i, j;
+	int i2, j2;
+	
+	Liste_Navires liste = liste_vide();
 	
 	for(i=0; i<n; i++) {
-		for() {
-			
+		for(j=0; j<n; j++) {
+			if(g[i][j] == 'N') {
+				g[i][j] = 'P';
+				if(g[i][j+1] == 'N') {
+					j2 = j++;
+					while(j2<n && g[i][j2] == 'N') { g[i][j2++] = 'P'; }
+					insertion(&liste, i, j, i, j2);
+				} else if(g[i+1][j] == 'N') {
+					i2 = i++;
+					while(i2<n && g[i2][j] == 'N') { g[i2][j] = 'P'; }
+				}
+			}
 		}
 	}
+	
+	return liste;
 	
 }
