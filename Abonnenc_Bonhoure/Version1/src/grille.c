@@ -22,6 +22,7 @@ typedef char **Grille;
  */
  int afficher_jeu(Grille g, int taille){
 	register unsigned int i,j;
+	printf("Le joueur 1 a placé ses navires, état de sa grille :\n");
 	// Affichage des indices de colonnes
 	printf("   ");
 	for (i = 0; i < taille; i++){
@@ -73,6 +74,25 @@ typedef char **Grille;
 	}
 	return 0;
  }
+ 
+ 
+// Allouer la grille
+/**
+ * Alloue une grille de taille n*n passée en paramètre. 
+ * Elle est supposées vide en début de fonction
+ * ---------------------------------------------------------------------
+ * allouer_grille(g,n) allour une grille g de taille n*n
+ */
+void allouer_grille(Grille g, int taille){
+	unsigned int i;
+	// création du tableau de tableau (tableau de pointeurs)
+	g = malloc( taille * sizeof(int*));
+	// Allouer chaque case du tableau (qui est un tableau)
+	for (i = 0; i < taille; i++){
+		g[i] = malloc( taille * sizeof(int));
+	}
+}
+
 
 // Remplissage de la grille
 /**
