@@ -1,3 +1,8 @@
+/**
+ * Abonnenc Bonhoure
+ * Mars 2016
+ */
+
 #include <stlib.h>
 #include <stdio.h>
 
