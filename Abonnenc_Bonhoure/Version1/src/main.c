@@ -3,7 +3,7 @@
  * Mars 2016
  */
 
-#include <stlib.h>
+#include <stdlib.h>
 #include <stdio.h>
 
 int main(int argc, char* argv[]){
