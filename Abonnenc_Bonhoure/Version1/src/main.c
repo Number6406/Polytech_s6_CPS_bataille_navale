@@ -17,19 +17,23 @@ int main(int argc, char* argv[]){
 	
 	// A t'on des paramètres ?
 	if(argc!=2){
-		fprintf(stderr,"Veuillez entrer la taille du tableau en paramètre");
+		fprintf(stderr,"Veuillez entrer la taille du tableau en paramètre\n");
 		return 1;
 	}
 	// On récupère la taille des grilles
 	taille = atoi(argv[1]);
 	
 	// Allocation des grilles
-	g=NULL;
-	gc=NULL;
-	allouer_grille(g,taille);
-	allouer_grille(gc,taille);
+	g=allouer_grille(taille);
+	gc=allouer_grille(taille);
 	
+	remplir_grille(g,taille);
 	
+	afficher_jeu(g,taille);
+	
+	remplir_etat(gc,taille);
+	
+	affiche_etat_coules(gc,taille);
 	
 	return 0;
 }

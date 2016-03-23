@@ -24,27 +24,28 @@ typedef char **Grille;
 	register unsigned int i,j;
 	printf("Le joueur 1 a placé ses navires, état de sa grille :\n");
 	// Affichage des indices de colonnes
-	printf("   ");
+	printf("  ");
 	for (i = 0; i < taille; i++){
-		printf("%3d",i);
+		printf("%2d",i);
 	}
 	printf("\n");
 	
 	// Affichage du tableau
 	for (i = 0; i < taille; i++){
-		printf("%2d  ",i); // indice de ligne
+		printf("%2d ",i); // indice de ligne
 		for (j = 0; j < taille; j++){
 			if(g[i][j]=='N'){
-				printf("N  ");
+				printf("N ");
 			} else {
 				if(g[i][j]=='B'){
-					printf("   ");
+					printf("  ");
 				} else { // Erreur, le charactere n'est ni 'N' ni 'B'
-					fprintf(stderr,"afficher_jeu : Caractère invalide\n");
+					fprintf(stderr,"afficher_jeu : Caractère invalide (%c)\n",g[i][j]);
 					return 1;
 				}
 			}
 		}
+		printf("\n");
 	}
 	return 0;
  }
@@ -59,18 +60,19 @@ typedef char **Grille;
  int affiche_etat_coules(Grille g, int taille){
 	register unsigned int i,j;
 	// Affichage des indices de colonnes
-	printf("   ");
+	printf("  ");
 	for (i = 0; i < taille; i++){
-		printf("%3d",i);
+		printf("%2d",i);
 	}
 	printf("\n");
 	
 	// Affichage du tableau
 	for (i = 0; i < taille; i++){
-		printf("%2d  ",i); // indice de ligne
+		printf("%2d ",i); // indice de ligne
 		for (j = 0; j < taille; j++){
-			printf("%c  ",g[i][j]);
+			printf("%c ",g[i][j]);
 		}
+		printf("\n");
 	}
 	return 0;
  }
@@ -83,14 +85,16 @@ typedef char **Grille;
  * ---------------------------------------------------------------------
  * allouer_grille(g,n) allour une grille g de taille n*n
  */
-void allouer_grille(Grille g, int taille){
+Grille allouer_grille(int taille){
 	unsigned int i;
+	Grille g;
 	// création du tableau de tableau (tableau de pointeurs)
 	g = malloc( taille * sizeof(int*));
 	// Allouer chaque case du tableau (qui est un tableau)
 	for (i = 0; i < taille; i++){
 		g[i] = malloc( taille * sizeof(int));
 	}
+	return g;
 }
 
 
@@ -108,7 +112,7 @@ void remplir_grille(Grille g, int taille){
 	
 	f = fopen("../exemples/partie1.txt","r");
 	if(f!=NULL){
-		fscanf(f,"%d",&x); // La taille de la grille est en début de fichier
+		fscanf(f,"%d\n",&x); // La taille de la grille est en début de fichier
 		// Si la taille est bonne, on lit la grille
 		if(x==taille){
 			for (i = 0; i < taille; i++){
@@ -118,10 +122,27 @@ void remplir_grille(Grille g, int taille){
 			}
 			
 		} else{
-			fprintf(stderr,"remplir_grille : taille incorrecte\n");
+			fprintf(stderr,"remplir_grille : Taille incorrecte\n");
+			exit(1);
 		}
 	}
 	else{
-		fprintf(stderr,"Fichier non ouvert\n");
+		fprintf(stderr,"remplir_grille : Fichier non ouvert\n");
+		exit(1);
+	}
+	fclose(f);
+}
+
+/**
+ * Remplit la grille du joueur 2 avec des espaces
+ * ---------------------------------------------------------------------
+ * La grille a déjà été allouée, il suffit de la remplir
+ */
+void remplir_etat(Grille g, int taille){
+	register unsigned int i, j;
+	for (i = 0; i < taille; i++){
+		for (j = 0; j < taille; j++){
+			g[i][j]=' ';
+		}
 	}
 }
