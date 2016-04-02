@@ -60,6 +60,7 @@ typedef char **Grille;
  int affiche_etat_coules(Grille g, int taille){
 	register unsigned int i,j;
 	// Affichage des indices de colonnes
+	printf("Etat du jeu pour le joueur 2:\n");
 	printf("  ");
 	for (i = 0; i < taille; i++){
 		printf("%2d",i);
