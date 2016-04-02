@@ -1,0 +1,60 @@
+#ifndef NAVIRES_H
+#define NAVIRES_H
+
+/**
+ * Abonnenc Bonhoure 
+ * Mars 2016
+ */
+
+typedef struct _Maillon Maillon;
+typedef struct _Liste_Navires Liste_Navires;
+
+/**
+ * Structure Maillon
+ * 4 entiers précisant les coordonnées de début et de fin d'un navire
+ * 1 entier indiquant si le navire est coulé (1) ou non (0)
+ */ 
+typedef struct _Maillon {
+	int xDeb;
+	int yDeb;
+	int xFin;
+	int yFin;
+	int coule;
+	Maillon *suivant;
+} Maillon;
+
+/**
+ * Structure de liste de navires (Maillon)
+ * Un pointeur vers un Maillon de début
+ * Un pointeur vers un Maillon de fin
+ */
+typedef struct _Liste_Navires {
+	Maillon *tete;
+	Maillon *queue;
+} Liste_Navires;
+
+/**
+ * Fonction initialisant et retournant une liste de navires vide
+ */
+Liste_Navires liste_vide() ;
+
+/**
+ * Créé un nouveau maillon à partir de coordonnées
+ */
+Maillon *nouveau(int ideb, int ifin, int jdeb, int jfin);
+
+/**
+ * 
+ */
+void insertion(Liste_Navires *l, int ideb, int ifin, int jdeb, int jfin) ;
+
+
+Liste_Navires cree_liste_navires(Grille g, int n);
+
+int navire_coule(Maillon *m, int ic, int jc, Grille gc);
+
+int un_navire_coule(Liste_Navires l, int ic, int jc, Grille gc);
+
+int un_navire_touche(Liste_Navires l, int ic, int jc, Grille gc);
+
+#endif
