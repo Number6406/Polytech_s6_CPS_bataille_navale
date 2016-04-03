@@ -45,14 +45,25 @@ Liste_Navires liste_vide() {
 	return l;
 }
 
+
+
+void afficher_liste_navire(Liste_Navires l){
+	Maillon *m = l.tete;
+	printf("AFFICHAGE DE LISTE\n");
+	while(m!=NULL){
+		printf("Maillon (%d,%d) --> (%d,%d) | Coulé : %d\n",m->xDeb,m->yDeb,m->xFin,m->yFin,m->coule);
+		m = m->suivant;
+	}
+}
+
 /**
  * Créé un nouveau maillon à partir de coordonnées
  */
-Maillon *nouveau(int ideb, int ifin, int jdeb, int jfin) {
+Maillon *nouveau(int ideb, int jdeb ,int ifin, int jfin) {
 	Maillon *m = (Maillon*)malloc(sizeof(Maillon));
 	m->xDeb = ideb;
-	m->xFin = ifin;
 	m->yDeb = jdeb;
+	m->xFin = ifin;
 	m->yFin = jfin;
 	m->coule = 0;
 	
@@ -60,10 +71,10 @@ Maillon *nouveau(int ideb, int ifin, int jdeb, int jfin) {
 }
 
 /**
- * 
+ * Insertion d'un nouveau maillon en fin de liste de navires.
  */
-void insertion(Liste_Navires *l, int ideb, int ifin, int jdeb, int jfin) {
-	Maillon *m = nouveau(ideb, ifin, jdeb, jfin);
+void insertion(Liste_Navires *l, int ideb, int jdeb, int ifin, int jfin) {
+	Maillon *m = nouveau(ideb,jdeb,ifin,jfin);
 	
 	if(l->queue == NULL) { //S'il n'y a pas de queue, alors la liste est vide
 		l->tete = m; //Insertion du maillon en tete
@@ -74,38 +85,51 @@ void insertion(Liste_Navires *l, int ideb, int ifin, int jdeb, int jfin) {
 	l->queue = m; //La queue de la liste pointe désormais sur le nouveau maillon
 }
 
+/**
+ * Crée une liste de navires à partir d'une grille
+ */
 Liste_Navires cree_liste_navires(Grille g, int n) {
 	int i, j;
 	int i2, j2;
-	
+	Grille parcouru = allouer_grille(n);
 	Liste_Navires liste = liste_vide();
 	
-	for(i=0; i<n; i++) {
-		for(j=0; j<n; j++) {
-			if(g[i][j] == 'N') {
-				g[i][j] = 'P';
-				if(g[i][j+1] == 'N') {
-					j2 = j++;
-					while(j2<n && g[i][j2] == 'N') { g[i][j2++] = 'P'; }
-					insertion(&liste, i, j, i, j2);
-				} else if(g[i+1][j] == 'N') {
-					i2 = i++;
-					while(i2<n && g[i2][j] == 'N') { g[i2][j] = 'P'; }
+	// Initialiser à non parcouru pour toutes les cases
+	for(i=0; i<n;i++){
+		for(j=0;j<n;j++){
+			parcouru[i][j]=0;
+		}
+	}
+	
+	for(i=0; i<n; i++) { // Ligne
+		for(j=0; j<n; j++) { // Colonne
+			if(g[i][j] == 'N' && !(parcouru[i][j])) { 
+				// Si on est sur un bateau qui n'est pas déjà dans la liste
+				parcouru[i][j] = 1;
+				if(g[i][j+1] == 'N') { // Bateau horizontal
+					parcouru[i][j+1] = 1;
+					j2 = j+1;
+					while(j2<n && g[i][j2] == 'N') { 
+						parcouru[i][j2] = 1; 
+						j2++;
+					}
+					insertion(&liste, i, j, i, j2-1);
+				} 
+				else if(g[i+1][j] == 'N') { // Bateau vertical
+					parcouru[i+1][j] = 1;
+					i2 = i+1;
+					while(i2<n && g[i2][j] == 'N') { 
+						parcouru[i2][j] = 1; 
+						i2++;
+					}
+					insertion(&liste, i, j, i2-1, j);
 				}
-			}
+			} 
 		}
 	}
 	
 	return liste;
 	
-}
-
-void afficher_liste_navire(Liste_Navires l){
-	Maillon *m = l.tete;
-	while(m!=NULL){
-		printf("Maillon (%d,%d) --> (%d,%d)\nCoulé : %d\n",m->xDeb,m->xFin,m->yDeb,m->yFin,m->coule);
-		m = m->suivant;
-	}
 }
 
 
@@ -125,6 +149,7 @@ int navire_coule(Maillon *m, int ic, int jc, Grille gc){
 				j++;
 			}
 			if(coule){ // Changer les cases du tableau
+				m->coule = 1;
 				for(j=m->yDeb; j<=m->yFin;j++){
 					gc[m->xDeb][j]='C';
 				}
@@ -141,6 +166,7 @@ int navire_coule(Maillon *m, int ic, int jc, Grille gc){
 				i++;
 			}
 			if(coule){ // Changer les cases du tableau
+				m->coule = 1;
 				for(i=m->xDeb; i<=m->xFin;i++){
 					gc[i][m->yDeb]='C';
 				}
@@ -168,7 +194,7 @@ int un_navire_coule(Liste_Navires l, int ic, int jc, Grille gc){
 int navire_touche(Maillon *m, int ic, int jc, Grille gc){
 	if(m!=NULL){
 		if((m->xDeb <= ic) && (ic <= m->xFin) && (m->yDeb <= jc) && (jc <= m->yFin)){
-			gc[ic][jc]='T';	
+			if(gc[ic][jc]!='C') gc[ic][jc]='T';	
 			return 1;
 		}		
 	}

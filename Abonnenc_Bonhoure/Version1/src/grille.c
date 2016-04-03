@@ -142,8 +142,8 @@ void remplir_grille(Grille g, int taille, char *nomfich){
 		fscanf(f,"%d\n",&x); // La taille de la grille est en début de fichier
 		// Si la taille est bonne, on lit la grille
 		if(x==taille){
-			for (i = 0; i < taille; i++){
-				for (j = 0; j < taille; j++){
+			for (i = 0; i < taille; i++){ // Ligne
+				for (j = 0; j < taille; j++){ // Colonne
 					fscanf(f,"%c ",&g[i][j]);
 				}
 			}

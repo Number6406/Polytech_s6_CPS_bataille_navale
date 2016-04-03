@@ -38,7 +38,6 @@ int main(int argc, char* argv[]){
 	afficher_jeu(g,taille);
 	#endif
 	
-	gc[5][2]='A';
 	affiche_etat_coules(gc,taille);
 	
 	Liste_Navires l;
@@ -51,11 +50,15 @@ int main(int argc, char* argv[]){
 	
 	int ic,jc;
 	while(!jeu_fini(l)){
-		printf("Tir en (x) (y) ? ");
+		printf("Tir en ?  (ligne colonne)  ");
 		scanf("%d %d",&ic,&jc);
 		joue(g,gc,taille,l,ic,jc);
 		affiche_etat_coules(gc,taille);
+		#ifdef DEBUG
+		afficher_liste_navire(l);
+		#endif
 	}
+	printf("Jeu fini !\n");
 	
 	return 0;
 }
