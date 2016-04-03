@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "../include/grille.h"
 
 /**
@@ -98,3 +99,90 @@ Liste_Navires cree_liste_navires(Grille g, int n) {
 	return liste;
 	
 }
+
+void afficher_liste_navire(Liste_Navires l){
+	Maillon *m = l.tete;
+	while(m!=NULL){
+		printf("Maillon (%d,%d) --> (%d,%d)\nCoulé : %d\n",m->xDeb,m->xFin,m->yDeb,m->yFin,m->coule);
+		m = m->suivant;
+	}
+}
+
+
+/**
+ * Renvoie 1 si le navire du maillon m est coulé par un tir en (ic,jc)
+ */
+int navire_coule(Maillon *m, int ic, int jc, Grille gc){
+	if(m!=NULL){
+		if(m->xDeb==m->xFin){ // Bateau Vertical
+			if(ic!=m->xDeb) {return 0;} // Si le tir n'est pas sur le bateau renvoyer faux
+			// Sinon verifier que l'on touche la derniere case non touchée
+			int j;
+			int coule = 1;
+			j = m->yDeb;
+			while(j<=m->yFin && coule){
+				coule = coule &&((gc[m->xDeb][j]=='T') || (jc==j)); // Déjà touché ou touché maintenant !
+				j++;
+			}
+			if(coule){ // Changer les cases du tableau
+				for(j=m->yDeb; j<=m->yFin;j++){
+					gc[m->xDeb][j]='C';
+				}
+			}
+			return coule;
+		} else { // Bateau Horizontal
+			if(jc!=m->yDeb) {return 0;} // Si le tir n'est pas sur le bateau renvoyer faux
+			// Sinon verifier que l'on touche la derniere case non touchée
+			int i;
+			int coule = 1;
+			i = m->xDeb;
+			while(i<=m->xFin && coule){
+				coule = coule &&((gc[i][m->yDeb]=='T') || (ic==i)); // Déjà touché ou touché maintenant !
+				i++;
+			}
+			if(coule){ // Changer les cases du tableau
+				for(i=m->xDeb; i<=m->xFin;i++){
+					gc[i][m->yDeb]='C';
+				}
+			}
+			return coule;
+		}
+	} 
+	return 0;
+}
+
+/**
+ * Renvoie 1 si un navire de la liste l est coulé par un tir en (ic,jc)
+ */
+int un_navire_coule(Liste_Navires l, int ic, int jc, Grille gc){
+	Maillon* tmp = l.tete;
+	while(tmp != NULL && !(navire_coule(tmp,ic,jc,gc))){
+		tmp = tmp->suivant;
+	}
+	return tmp!=NULL;
+}
+
+/**
+ * Renvoie 1 si le navire du maillon m est touché par un tir en (ic,jc)
+ */
+int navire_touche(Maillon *m, int ic, int jc, Grille gc){
+	if(m!=NULL){
+		if((m->xDeb <= ic) && (ic <= m->xFin) && (m->yDeb <= jc) && (jc <= m->yFin)){
+			gc[ic][jc]='T';	
+			return 1;
+		}		
+	}
+	return 0;
+}
+
+/**
+ * Renvoie 1 si un navire de la liste l est touché par un tir en (ic,jc)
+ */
+int un_navire_touche(Liste_Navires l, int ic, int jc, Grille gc){
+	Maillon* tmp = l.tete;
+	while(tmp != NULL && !(navire_touche(tmp,ic,jc,gc))){
+		tmp = tmp->suivant;
+	}
+	return tmp!=NULL;
+}
+

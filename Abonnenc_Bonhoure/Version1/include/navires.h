@@ -51,10 +51,21 @@ void insertion(Liste_Navires *l, int ideb, int ifin, int jdeb, int jfin) ;
 
 Liste_Navires cree_liste_navires(Grille g, int n);
 
+void afficher_liste_navire(Liste_Navires l);
+
+/**
+ * Renvoie 1 si le navire du maillon m est coulé par un tir en (ic,jc)
+ */
 int navire_coule(Maillon *m, int ic, int jc, Grille gc);
 
+/**
+ * Renvoie 1 si un navire de la liste l est coulé par un tir en (ic,jc)
+ */
 int un_navire_coule(Liste_Navires l, int ic, int jc, Grille gc);
 
+/**
+ * Renvoie 1 si un navire de la liste l est touché par un tir en (ic,jc)
+ */
 int un_navire_touche(Liste_Navires l, int ic, int jc, Grille gc);
 
 #endif

@@ -18,10 +18,14 @@ void joue(Grille g, Grille gc, int n, Liste_Navires l, int i, int j){
 		}
 	} else{
 		printf("-----Raté-----\n");
+		gc[i][j]='X';
 	}
 	
 }
 
+/**
+ * Renvoie 1 si tout les bateaux ont été coulés
+ */
 int jeu_fini(Liste_Navires l){
 	Maillon *tmp = l.tete;
 	while(tmp!=NULL && (tmp->coule==1)){

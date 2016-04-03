@@ -54,13 +54,40 @@ typedef char **Grille;
  * Fonction d'affichage de l'état courant du jeu du joueur 2.
  * Les informations peuvent être (T)ouché, (C)oulé, (X) pour raté ou ( )
  * ---------------------------------------------------------------------
- * afficher_jeu(G,n) affiche une grille de taille n*n
+ * affiche_etat_coules(G,n) affiche une grille de taille n*n
  * en affichant les indices de lignes et de colonnes
  */
  int affiche_etat_coules(Grille g, int taille){
 	register unsigned int i,j;
 	// Affichage des indices de colonnes
 	printf("Etat du jeu pour le joueur 2:\n");
+	printf("  ");
+	for (i = 0; i < taille; i++){
+		printf("%2d",i);
+	}
+	printf("\n");
+	
+	// Affichage du tableau
+	for (i = 0; i < taille; i++){
+		printf("%2d ",i); // indice de ligne
+		for (j = 0; j < taille; j++){
+			printf("%c ",g[i][j]);
+		}
+		printf("\n");
+	}
+	return 0;
+ }
+ 
+  /**
+ * Fonction d'affichage d'une grille, pour le debogage
+ * ---------------------------------------------------------------------
+ * afficher_grille(G,n) affiche une grille de taille n*n
+ * en affichant les indices de lignes et de colonnes
+ */
+ int afficher_grille(Grille g, int taille){
+	register unsigned int i,j;
+	// Affichage des indices de colonnes
+	printf("Affichage de debogage:\n");
 	printf("  ");
 	for (i = 0; i < taille; i++){
 		printf("%2d",i);
@@ -106,12 +133,11 @@ Grille allouer_grille(int taille){
  * ---------------------------------------------------------------------
  * La grille a déjà été allouée, il suffit de la remplir
  */
-void remplir_grille(Grille g, int taille){
-	FILE *f;
+void remplir_grille(Grille g, int taille, char *nomfich){
 	register unsigned int i, j;
 	int x;
-	
-	f = fopen("../exemples/partie1.txt","r");
+	FILE *f;
+	f = fopen(nomfich,"r");
 	if(f!=NULL){
 		fscanf(f,"%d\n",&x); // La taille de la grille est en début de fichier
 		// Si la taille est bonne, on lit la grille
