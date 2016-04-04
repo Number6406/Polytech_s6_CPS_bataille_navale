@@ -46,7 +46,9 @@ Liste_Navires liste_vide() {
 }
 
 
-
+/**
+ * Affichage d'une liste de navires (pour le deboggage
+ */
 void afficher_liste_navire(Liste_Navires l){
 	Maillon *m = l.tete;
 	printf("AFFICHAGE DE LISTE\n");
@@ -68,6 +70,54 @@ Maillon *nouveau(int ideb, int jdeb ,int ifin, int jfin) {
 	m->coule = 0;
 	
 	return m;
+}
+
+
+
+/**
+ * Renvoie la taille du navire contenu dans le maillon
+ */
+int taille_navire(Maillon *m){
+	if (m!=NULL){
+		if(m->xDeb==m->xFin){return (m->yFin - m->yDeb) +1;}
+		return (m->xFin - m->xDeb) +1;
+	}
+	else{
+		fprintf(stderr,"taille_navire : navire inexistant\n");
+		return 0;
+	}
+}
+
+/**
+ * Renvoie vrai si la liste contient :
+ * 	1 porte-avion (6 cases)
+ * 	2 croiseurs (4 cases)
+ * 	3 contre-torpilleurs (3 cases)
+ * 	4 torpilleurs (2 cases)
+ */
+int liste_valide (Liste_Navires l){
+	Maillon *tmp = l.tete;
+	int pa,cr,ct,tp;
+	pa = 0;
+	cr = 0;
+	ct = 0;
+	tp = 0;
+	while(tmp!=NULL){
+		switch (taille_navire(tmp)) {
+			case 6 : pa++;
+					break;
+			case 4 : cr++;
+					break;
+			case 3 : ct++;
+					break;
+			case 2 : tp++;	
+					break;
+			default : fprintf(stderr,"liste_valide : taille de navire invalide (%d) Tailles OK : 2,3,4 ou 6.\n",taille_navire(tmp));
+					return 0;
+		}
+		tmp = tmp->suivant;
+	}
+	return (pa==1)&&(cr==2)&&(ct==3)&&(tp==4);
 }
 
 /**
@@ -127,11 +177,9 @@ Liste_Navires cree_liste_navires(Grille g, int n) {
 			} 
 		}
 	}
-	
 	return liste;
 	
 }
-
 
 /**
  * Renvoie 1 si le navire du maillon m est coulé par un tir en (ic,jc)

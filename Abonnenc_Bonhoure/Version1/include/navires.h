@@ -48,6 +48,14 @@ Maillon *nouveau(int ideb, int ifin, int jdeb, int jfin);
  */
 void insertion(Liste_Navires *l, int ideb, int ifin, int jdeb, int jfin) ;
 
+/**
+ * Renvoie vrai si la liste contient :
+ * 	1 porte-avion (6 cases)
+ * 	2 croiseurs (4 cases)
+ * 	3 contre-torpilleurs (3 cases)
+ * 	4 torpilleurs (2 cases)
+ */
+int liste_valide (Liste_Navires l);
 
 Liste_Navires cree_liste_navires(Grille g, int n);
 

@@ -10,7 +10,7 @@
 #include "../include/navires.h"
 #include "../include/jeu.h"
 
-#define DEBUG
+//#define DEBUG
 
 /**
  * Fonction principale de jeu
@@ -38,16 +38,20 @@ int main(int argc, char* argv[]){
 	afficher_jeu(g,taille);
 	#endif
 	
-	affiche_etat_coules(gc,taille);
-	
 	Liste_Navires l;
 	l=cree_liste_navires(g,taille);
+	if(!(liste_valide(l))){
+		fprintf(stderr,"Nombre de navires invalides.\n");
+		fprintf(stderr,"Il faut \n1 porte-avion (6 cases)\n2 croiseurs (4 cases)\n3 contre-torpilleurs (3 cases)\n4 torpilleurs (2 cases)\n");
+		return 0;
+	}
 	
 	#ifdef DEBUG
 	afficher_liste_navire(l);
 	afficher_grille(g,taille);
 	#endif
 	
+	affiche_etat_coules(gc,taille);
 	int ic,jc;
 	while(!jeu_fini(l)){
 		printf("Tir en ?  (ligne colonne)  ");

@@ -12,7 +12,7 @@ void joue(Grille g, Grille gc, int n, Liste_Navires l, int i, int j){
 	
 	if(un_navire_touche(l,i,j,gc)){
 		if(un_navire_coule(l,i,j,gc)){
-			printf("-----COULÉ-----\n");
+			printf("---!!COULÉ!!---\n");
 		} else {
 			printf("-----Touché-----\n");
 		}
