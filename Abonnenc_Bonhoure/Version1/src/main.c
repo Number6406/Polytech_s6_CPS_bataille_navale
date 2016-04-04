@@ -48,14 +48,16 @@ int main(int argc, char* argv[]){
 	
 	#ifdef DEBUG
 	afficher_liste_navire(l);
-	afficher_grille(g,taille);
 	#endif
 	
 	affiche_etat_coules(gc,taille);
 	int ic,jc;
 	while(!jeu_fini(l)){
-		printf("Tir en ?  (ligne colonne)  ");
-		scanf("%d %d",&ic,&jc);
+		ic = -1;
+		while(ic>=taille || jc >= taille || ic < 0 || jc <0){
+			printf("Tir en ?  (ligne colonne)  ");
+			scanf("%d %d",&ic,&jc);
+		}
 		joue(g,gc,taille,l,ic,jc);
 		affiche_etat_coules(gc,taille);
 		#ifdef DEBUG

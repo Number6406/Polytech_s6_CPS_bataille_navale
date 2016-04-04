@@ -7,8 +7,6 @@ int afficher_jeu(Grille g, int taille);
  
 int affiche_etat_coules(Grille g, int taille);
 
- int afficher_grille(Grille g, int taille);
-
 Grille allouer_grille(int taille);
 
 void remplir_grille(Grille g, int taille, char *nomfich);

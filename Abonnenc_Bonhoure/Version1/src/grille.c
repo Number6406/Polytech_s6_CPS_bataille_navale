@@ -78,33 +78,6 @@ typedef char **Grille;
 	return 0;
  }
  
-  /**
- * Fonction d'affichage d'une grille, pour le debogage
- * ---------------------------------------------------------------------
- * afficher_grille(G,n) affiche une grille de taille n*n
- * en affichant les indices de lignes et de colonnes
- */
- int afficher_grille(Grille g, int taille){
-	register unsigned int i,j;
-	// Affichage des indices de colonnes
-	printf("Affichage de debogage:\n");
-	printf("  ");
-	for (i = 0; i < taille; i++){
-		printf("%2d",i);
-	}
-	printf("\n");
-	
-	// Affichage du tableau
-	for (i = 0; i < taille; i++){
-		printf("%2d ",i); // indice de ligne
-		for (j = 0; j < taille; j++){
-			printf("%c ",g[i][j]);
-		}
-		printf("\n");
-	}
-	return 0;
- }
- 
  
 // Allouer la grille
 /**
