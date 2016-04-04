@@ -12,7 +12,7 @@ typedef struct _Liste_Navires Liste_Navires;
 /**
  * Structure Maillon
  * 4 entiers précisant les coordonnées de début et de fin d'un navire
- * 1 entier indiquant si le navire est coulé (1) ou non (0)
+ * 1 booléen indiquant si le navire est coulé (1) ou non (0)
  */ 
 typedef struct _Maillon {
 	int xDeb;
@@ -34,19 +34,21 @@ typedef struct _Liste_Navires {
 } Liste_Navires;
 
 /**
- * Fonction initialisant et retournant une liste de navires vide
+ * Fonction retournant une liste de navires vide
  */
 Liste_Navires liste_vide() ;
 
-/**
- * Créé un nouveau maillon à partir de coordonnées
- */
-Maillon *nouveau(int ideb, int ifin, int jdeb, int jfin);
+
 
 /**
- * 
+ * Affichage d'une liste de navires (pour le deboggage)
  */
-void insertion(Liste_Navires *l, int ideb, int ifin, int jdeb, int jfin) ;
+ void afficher_liste_navire(Liste_Navires l);
+
+/**
+ * Créé et alloue un nouveau maillon à partir des coordonnées fournies
+ */
+Maillon *nouveau(int ideb, int jdeb ,int ifin, int jfin);
 
 /**
  * Renvoie vrai si la liste contient :
@@ -57,17 +59,34 @@ void insertion(Liste_Navires *l, int ideb, int ifin, int jdeb, int jfin) ;
  */
 int liste_valide (Liste_Navires l);
 
-Liste_Navires cree_liste_navires(Grille g, int n);
+/**
+ * Insertion d'un nouveau maillon en fin de liste de navires.
+ */
+void insertion(Liste_Navires *l, int ideb, int ifin, int jdeb, int jfin) ;
 
-void afficher_liste_navire(Liste_Navires l);
+/**
+ * Crée une liste de navires à partir d'une grille
+ * ---------------------------------------------------------------------
+ * Cette fonction renvoie une liste de navires contenant tout les
+ * navires de la grille passée en paramètres.
+ * Elle ne s'occupe pas de vérfier que leur nombre et leur taille
+ * correspond aux régles de la Bataille Navale (cf liste_valide)
+ */
+Liste_Navires cree_liste_navires(Grille g, int n);
 
 /**
  * Renvoie 1 si le navire du maillon m est coulé par un tir en (ic,jc)
+ * ---------------------------------------------------------------------
+ * Cette fonction modifie également l'état de la grille si le navire 
+ * est coulé
  */
 int navire_coule(Maillon *m, int ic, int jc, Grille gc);
 
 /**
  * Renvoie 1 si un navire de la liste l est coulé par un tir en (ic,jc)
+ * ---------------------------------------------------------------------
+ * Cela se faitpar un parcoursde la liste en appelant la fonction 
+ * ci-dessus
  */
 int un_navire_coule(Liste_Navires l, int ic, int jc, Grille gc);
 

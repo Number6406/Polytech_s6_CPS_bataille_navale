@@ -10,11 +10,6 @@
 typedef struct _Maillon Maillon;
 typedef struct _Liste_Navires Liste_Navires;
 
-/**
- * Structure Maillon
- * 4 entiers précisant les coordonnées de début et de fin d'un navire
- * 1 entier indiquant si le navire est coulé (1) ou non (0)
- */ 
 typedef struct _Maillon {
 	int xDeb;
 	int yDeb;
@@ -24,31 +19,18 @@ typedef struct _Maillon {
 	Maillon *suivant;
 } Maillon;
 
-/**
- * Structure de liste de navires (Maillon)
- * Un pointeur vers un Maillon de début
- * Un pointeur vers un Maillon de fin
- */
 typedef struct _Liste_Navires {
 	Maillon *tete;
 	Maillon *queue;
 } Liste_Navires;
 
-/**
- * Fonction initialisant et retournant une liste de navires vide
- */
 Liste_Navires liste_vide() {
-	//Allocation dynamique de mémoire 
 	Liste_Navires l;
 	l.tete = NULL;
 	l.queue = NULL;
 	return l;
 }
 
-
-/**
- * Affichage d'une liste de navires (pour le deboggage
- */
 void afficher_liste_navire(Liste_Navires l){
 	Maillon *m = l.tete;
 	printf("AFFICHAGE DE LISTE\n");
@@ -58,9 +40,6 @@ void afficher_liste_navire(Liste_Navires l){
 	}
 }
 
-/**
- * Créé un nouveau maillon à partir de coordonnées
- */
 Maillon *nouveau(int ideb, int jdeb ,int ifin, int jfin) {
 	Maillon *m = (Maillon*)malloc(sizeof(Maillon));
 	m->xDeb = ideb;
@@ -74,7 +53,7 @@ Maillon *nouveau(int ideb, int jdeb ,int ifin, int jfin) {
 
 
 
-/**
+/** Fonction locale.
  * Renvoie la taille du navire contenu dans le maillon
  */
 int taille_navire(Maillon *m){
@@ -88,21 +67,14 @@ int taille_navire(Maillon *m){
 	}
 }
 
-/**
- * Renvoie vrai si la liste contient :
- * 	1 porte-avion (6 cases)
- * 	2 croiseurs (4 cases)
- * 	3 contre-torpilleurs (3 cases)
- * 	4 torpilleurs (2 cases)
- */
 int liste_valide (Liste_Navires l){
 	Maillon *tmp = l.tete;
-	int pa,cr,ct,tp;
+	int pa,cr,ct,tp; // Variables pour compter le nombre de bateaux
 	pa = 0;
 	cr = 0;
 	ct = 0;
 	tp = 0;
-	while(tmp!=NULL){
+	while(tmp!=NULL){ // On traite tout les navires de la liste
 		switch (taille_navire(tmp)) {
 			case 6 : pa++;
 					break;
@@ -120,9 +92,6 @@ int liste_valide (Liste_Navires l){
 	return (pa==1)&&(cr==2)&&(ct==3)&&(tp==4);
 }
 
-/**
- * Insertion d'un nouveau maillon en fin de liste de navires.
- */
 void insertion(Liste_Navires *l, int ideb, int jdeb, int ifin, int jfin) {
 	Maillon *m = nouveau(ideb,jdeb,ifin,jfin);
 	
@@ -135,9 +104,7 @@ void insertion(Liste_Navires *l, int ideb, int jdeb, int ifin, int jfin) {
 	l->queue = m; //La queue de la liste pointe désormais sur le nouveau maillon
 }
 
-/**
- * Crée une liste de navires à partir d'une grille
- */
+
 Liste_Navires cree_liste_navires(Grille g, int n) {
 	int i, j;
 	int i2, j2;
@@ -225,9 +192,6 @@ int navire_coule(Maillon *m, int ic, int jc, Grille gc){
 	return 0;
 }
 
-/**
- * Renvoie 1 si un navire de la liste l est coulé par un tir en (ic,jc)
- */
 int un_navire_coule(Liste_Navires l, int ic, int jc, Grille gc){
 	Maillon* tmp = l.tete;
 	while(tmp != NULL && !(navire_coule(tmp,ic,jc,gc))){
@@ -236,8 +200,10 @@ int un_navire_coule(Liste_Navires l, int ic, int jc, Grille gc){
 	return tmp!=NULL;
 }
 
-/**
- * Renvoie 1 si le navire du maillon m est touché par un tir en (ic,jc)
+/** Fonction locale.
+ * Renvoie vrai si le navire est touché par le tir
+ * ---------------------------------------------------------------------
+ * Il modifie la grille (si le bateau visé n'ets pas déjà coulé
  */
 int navire_touche(Maillon *m, int ic, int jc, Grille gc){
 	if(m!=NULL){
@@ -249,9 +215,6 @@ int navire_touche(Maillon *m, int ic, int jc, Grille gc){
 	return 0;
 }
 
-/**
- * Renvoie 1 si un navire de la liste l est touché par un tir en (ic,jc)
- */
 int un_navire_touche(Liste_Navires l, int ic, int jc, Grille gc){
 	Maillon* tmp = l.tete;
 	while(tmp != NULL && !(navire_touche(tmp,ic,jc,gc))){

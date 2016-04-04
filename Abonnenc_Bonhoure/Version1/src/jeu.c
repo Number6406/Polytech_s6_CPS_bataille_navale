@@ -3,14 +3,9 @@
 #include "../include/grille.h"
 #include "../include/navires.h"
 
-
-/**
- * Fonction qui joue une attaque en (i,j) et affiche le résultat.
- * Raté, Touché, Coulé
- */
 void joue(Grille g, Grille gc, int n, Liste_Navires l, int i, int j){
 	
-	if(un_navire_touche(l,i,j,gc)){
+	if(un_navire_touche(l,i,j,gc)){ // Un navire est touché, on vérifie s'il est coulé.
 		if(un_navire_coule(l,i,j,gc)){
 			printf("---!!COULÉ!!---\n");
 		} else {
@@ -23,9 +18,6 @@ void joue(Grille g, Grille gc, int n, Liste_Navires l, int i, int j){
 	
 }
 
-/**
- * Renvoie 1 si tout les bateaux ont été coulés
- */
 int jeu_fini(Liste_Navires l){
 	Maillon *tmp = l.tete;
 	while(tmp!=NULL && (tmp->coule==1)){
