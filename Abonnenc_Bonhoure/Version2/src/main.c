@@ -9,6 +9,7 @@
 #include "../include/grille.h"
 #include "../include/navires.h"
 #include "../include/jeu.h"
+#include "../include/int32io.h"
 
 //#define DEBUG
 
@@ -24,6 +25,9 @@ int main(int argc, char* argv[]){
 		fprintf(stderr,"Veuillez entrer la taille du tableau ET le fichier de partie en paramètre\n");
 		return 1;
 	}
+	
+	printf("Bienvenue dans la Version 2 de la Bataille Navale.\n");
+	
 	// On récupère la taille des grilles
 	taille = atoi(argv[1]);
 	
@@ -40,15 +44,17 @@ int main(int argc, char* argv[]){
 	
 	Liste_Navires l;
 	l=cree_liste_navires(g,taille);
+	
+	#ifdef DEBUG
+	afficher_liste_navire(l);
+	#endif
+	
 	if(!(liste_valide(l))){
 		fprintf(stderr,"Nombre de navires invalides.\n");
 		fprintf(stderr,"Il faut \n1 porte-avion (6 cases)\n2 croiseurs (4 cases)\n3 contre-torpilleurs (3 cases)\n4 torpilleurs (2 cases)\n");
 		return 0;
 	}
 	
-	#ifdef DEBUG
-	afficher_liste_navire(l);
-	#endif
 	
 	affiche_etat_coules(gc,taille);
 	int ic,jc;
@@ -64,7 +70,7 @@ int main(int argc, char* argv[]){
 		afficher_liste_navire(l);
 		#endif
 	}
-	printf("Jeu fini !\n");
+	printf("// Jeu fini ! :D //\n");
 	
 	return 0;
 }

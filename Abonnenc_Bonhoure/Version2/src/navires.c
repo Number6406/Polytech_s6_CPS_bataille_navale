@@ -6,17 +6,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "../include/grille.h"
+#include "../include/int32io.h"
 
 
 typedef struct _Maillon Maillon;
 typedef struct _Liste_Navires Liste_Navires;
 
 typedef struct _Maillon {
-	int xDeb;
-	int yDeb;
-	int xFin;
-	int yFin;
-	int coule;
+	int32_t *infos; 
 	Maillon *suivant;
 } Maillon;
 
@@ -36,31 +33,32 @@ void afficher_liste_navire(Liste_Navires l){
 	Maillon *m = l.tete;
 	printf("AFFICHAGE DE LISTE\n");
 	while(m!=NULL){
-		printf("Maillon (%d,%d) --> (%d,%d) | Coulé : %d\n",m->xDeb,m->yDeb,m->xFin,m->yFin,m->coule);
+		int32_t *x = (m->infos);
+		printf("Maillon (%d,%d) --> (%d,%d) | Coulé : %d\n",get_i_debut(x),get_j_debut(x),get_i_fin(x),get_j_fin(x),get_coule(x));
 		m = m->suivant;
 	}
 }
 
 Maillon *nouveau(int ideb, int jdeb ,int ifin, int jfin) {
 	Maillon *m = (Maillon*)malloc(sizeof(Maillon));
-	m->xDeb = ideb;
-	m->yDeb = jdeb;
-	m->xFin = ifin;
-	m->yFin = jfin;
-	m->coule = 0;
+	m->infos = (int32_t*)malloc(sizeof(int32_t));
+	set_i_debut((m->infos),ideb);
+	set_j_debut((m->infos),jdeb);
+	set_i_fin((m->infos),ifin);
+	set_j_fin((m->infos),jfin);
+	set_coule((m->infos),0);
 	
 	return m;
 }
-
-
 
 /** Fonction locale.
  * Renvoie la taille du navire contenu dans le maillon
  */
 int taille_navire(Maillon *m){
 	if (m!=NULL){
-		if(m->xDeb==m->xFin){return (m->yFin - m->yDeb) +1;}
-		return (m->xFin - m->xDeb) +1;
+		int32_t *x = (m->infos);
+		if(get_i_debut(x)==get_i_fin(x)){return (get_j_fin(x)-get_j_debut(x)) +1;}
+		return (get_i_fin(x)-get_i_debut(x)) +1;
 	}
 	else{
 		fprintf(stderr,"taille_navire : navire inexistant\n");
@@ -154,37 +152,38 @@ Liste_Navires cree_liste_navires(Grille g, int n) {
  */
 int navire_coule(Maillon *m, int ic, int jc, Grille gc){
 	if(m!=NULL){
-		if(m->xDeb==m->xFin){ // Bateau Vertical
-			if(ic!=m->xDeb) {return 0;} // Si le tir n'est pas sur le bateau renvoyer faux
+		int32_t *x = m->infos;
+		if(get_i_debut(x)==get_i_fin(x)){ // Bateau Vertical
+			if(ic!=get_i_debut(x)) {return 0;} // Si le tir n'est pas sur le bateau renvoyer faux
 			// Sinon verifier que l'on touche la derniere case non touchée
 			int j;
 			int coule = 1;
-			j = m->yDeb;
-			while(j<=m->yFin && coule){
-				coule = coule &&((gc[m->xDeb][j]=='T') || (jc==j)); // Déjà touché ou touché maintenant !
+			j = get_j_debut(x);
+			while(j <= get_j_fin(x) && coule){
+				coule = coule &&((gc[get_i_debut(x)][j]=='T') || (jc==j)); // Déjà touché ou touché maintenant !
 				j++;
 			}
 			if(coule){ // Changer les cases du tableau
-				m->coule = 1;
-				for(j=m->yDeb; j<=m->yFin;j++){
-					gc[m->xDeb][j]='C';
+				set_coule(x,1);
+				for(j=get_j_debut(x); j<=get_j_fin(x);j++){
+					gc[get_i_debut(x)][j]='C';
 				}
 			}
 			return coule;
 		} else { // Bateau Horizontal
-			if(jc!=m->yDeb) {return 0;} // Si le tir n'est pas sur le bateau renvoyer faux
+			if(jc!=get_j_debut(x)) {return 0;} // Si le tir n'est pas sur le bateau renvoyer faux
 			// Sinon verifier que l'on touche la derniere case non touchée
 			int i;
 			int coule = 1;
-			i = m->xDeb;
-			while(i<=m->xFin && coule){
-				coule = coule &&((gc[i][m->yDeb]=='T') || (ic==i)); // Déjà touché ou touché maintenant !
+			i = get_i_debut(x);
+			while(i<= get_i_fin(x) && coule){
+				coule = coule &&((gc[i][get_j_debut(x)]=='T') || (ic==i)); // Déjà touché ou touché maintenant !
 				i++;
 			}
 			if(coule){ // Changer les cases du tableau
-				m->coule = 1;
-				for(i=m->xDeb; i<=m->xFin;i++){
-					gc[i][m->yDeb]='C';
+				set_coule(x, 1);
+				for(i= get_i_debut(x); i<= get_i_fin(x);i++){
+					gc[i][get_j_debut(x)]='C';
 				}
 			}
 			return coule;
@@ -208,7 +207,8 @@ int un_navire_coule(Liste_Navires l, int ic, int jc, Grille gc){
  */
 int navire_touche(Maillon *m, int ic, int jc, Grille gc){
 	if(m!=NULL){
-		if((m->xDeb <= ic) && (ic <= m->xFin) && (m->yDeb <= jc) && (jc <= m->yFin)){
+		int32_t *x = m->infos;
+		if((get_i_debut(x) <= ic) && (ic <= get_i_fin(x)) && (get_j_debut(x) <= jc) && (jc <= get_j_fin(x))){
 			if(gc[ic][jc]!='C') gc[ic][jc]='T';	
 			return 1;
 		}		

@@ -1,7 +1,7 @@
 CC = gcc
 EXEC = ../bin/main
 CFLAGS = -Wall -I ../include
-SRCS = main.c grille.c navires.c jeu.c
+SRCS = main.c grille.c navires.c jeu.c int32io.c
 OBJS = $(SRCS:.c=.o)
 
 

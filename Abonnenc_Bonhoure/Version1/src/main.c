@@ -24,6 +24,9 @@ int main(int argc, char* argv[]){
 		fprintf(stderr,"Veuillez entrer la taille du tableau ET le fichier de partie en paramètre\n");
 		return 1;
 	}
+	
+	printf("Bienvenue dans la Version 1 de la Bataille Navale.\n");
+	
 	// On récupère la taille des grilles
 	taille = atoi(argv[1]);
 	
@@ -64,7 +67,7 @@ int main(int argc, char* argv[]){
 		afficher_liste_navire(l);
 		#endif
 	}
-	printf("Jeu fini !\n");
+	printf("// Jeu fini ! :D //\n");
 	
 	return 0;
 }

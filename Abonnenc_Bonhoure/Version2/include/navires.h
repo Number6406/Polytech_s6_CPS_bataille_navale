@@ -15,11 +15,7 @@ typedef struct _Liste_Navires Liste_Navires;
  * 1 booléen indiquant si le navire est coulé (1) ou non (0)
  */ 
 typedef struct _Maillon {
-	int xDeb;
-	int yDeb;
-	int xFin;
-	int yFin;
-	int coule;
+	int32_t infos;
 	Maillon *suivant;
 } Maillon;
 
@@ -37,8 +33,6 @@ typedef struct _Liste_Navires {
  * Fonction retournant une liste de navires vide
  */
 Liste_Navires liste_vide() ;
-
-
 
 /**
  * Affichage d'une liste de navires (pour le deboggage)

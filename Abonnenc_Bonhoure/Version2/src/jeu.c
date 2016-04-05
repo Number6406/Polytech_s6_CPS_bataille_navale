@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include "../include/grille.h"
 #include "../include/navires.h"
+#include "../include/int32io.h"
 
 void joue(Grille g, Grille gc, int n, Liste_Navires l, int i, int j){
 	
@@ -25,7 +26,7 @@ void joue(Grille g, Grille gc, int n, Liste_Navires l, int i, int j){
 
 int jeu_fini(Liste_Navires l){
 	Maillon *tmp = l.tete;
-	while(tmp!=NULL && (tmp->coule==1)){
+	while(tmp!=NULL && (get_coule(tmp->infos)==1)){
 		tmp = tmp->suivant;
 	}
 	return tmp == NULL;
