@@ -58,11 +58,19 @@ int main(int argc, char* argv[]){
 	
 	affiche_etat_coules(gc,taille);
 	int ic,jc;
+	
+	//Fonction de flush du buffer ( fflush(stdin) ne fonctionne pas pour toutes les machines )
+	int clean_stdin() {
+		while (getchar()!='\n');
+		return 1;
+	}
+	
 	while(!jeu_fini(l)){
 		ic = -1;
 		while(ic>=taille || jc >= taille || ic < 0 || jc <0){
-			printf("Tir en ?  (ligne colonne)  ");
-			scanf("%d %d",&ic,&jc);
+			do {
+				printf("Tir en ?  (ligne colonne)  ");
+			} while (scanf("%d %d", &ic,&jc)!=2 && clean_stdin()); //Vérifie le format d'entrée de coordonnées
 		}
 		joue(g,gc,taille,l,ic,jc);
 		affiche_etat_coules(gc,taille);
