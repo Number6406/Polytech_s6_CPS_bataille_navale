@@ -21,37 +21,38 @@
  * ---------------------------------------------------------------------
  * set_field(adr_x,faible,fort,v) place la valeur v dans l'entier 
  * d'adresse x, en ne modifiant pas le bits avant faible et apres fort
+ * pour cela nous créons des masques d'effacement et d'écriture.
  */
 void set_field (int32_t *adr_x, int faible, int fort, int v){
-	uint32_t lu = 1;
+	uint32_t masque = 1;
 	uint32_t eff;
 	unsigned int i;
 	int32_t x = *adr_x; // Récupérer la valeur
 	
-	// Modifier x
-	// Bien placer V à partir de faible
-	v = (unsigned int)v << faible;
-	// Crée un masque pour mettre à 0 la valeur qui dépasse.
-	for(i = 0; i<fort;i++){
-		lu = (lu<<1)|1;
-	}
-	v &= lu;
-	
-	// Mettre à 0 les bits de x entre faible et fort
-	// On crée un masque
-	lu = 0xFFFFFFFF;
+	/* On crée un masque (lu) pour effacer les bits de x entre faible et fort */
+	masque = 0xFFFFFFFF; // Tout est à 1
 	for(i=faible;i<=fort;i++){
-		eff = ~(1<<(i));
-		lu &= eff;
+		eff = ~(1<<(i)); // On mets à 0 les bits entre faible et fort du masque
+		masque &= eff;
 	}
-	// On efface dans x
-	x &= lu;
+	// On efface x en faisant un "et"
+	x &= masque;
 	
+	/* On décale la valeur v et on la tronque pour etre entre faible et fort */
+	v = (unsigned int)v << faible; // v est à partir de faible et au delà
 	
-	// On remplace
+	// On crée un masque pour mettre à 0 les bits de v au delà du bit fort
+	masque = 1;
+	for(i = 0; i<fort;i++){ // Ce masque est a 1 du bit 0 au bit fort puis il est à 0
+		masque = (masque<<1)|1;
+	}
+	// effacement des bits de v au delà de fort
+	v &= masque;
+	
+	// On remplace la valeur dans x par la nouvelle valeur v
 	x |= v;
 	
-	// On stocke
+	// On stocke x au bon endroit
 	*adr_x = x;
 }
 
@@ -63,17 +64,22 @@ void set_field (int32_t *adr_x, int faible, int fort, int v){
  * b_faible et b_fort
  */
 int get_field(int32_t * adr_x, int faible, int fort){
-	uint32_t lu = 1;
+	uint32_t masque = 1;
 	unsigned int i;
 	int32_t x = *adr_x; // Récupérer la valeur
 	
-	// Crée un masque pour mettre à 0 la valeur qui dépasse.
-	lu = 1<<faible;
+	/* On crée un masque pour récupérer les bits entre faible et fort
+	 * Il sera à 0 de partout sauf sur les bits de faible à fort */
+	masque = 1<<faible;
 	for(i = 0; i<fort-faible;i++){
-		lu = (lu<<1)|(1<<faible);
+		masque = (masque<<1)|(1<<faible);
 	}
-	x = x & lu;
+	/* x prends la valeur contenue aux bits faible à fort */
+	x = x & masque;
+	/* On décale la valeur récupérée pour que faible soit en position 0
+	 * On caste en unsigned pour insérer des 0 */
 	x = (uint32_t)x >> faible;
+	/* On envoie la valeur en la castant en int */
 	return (int)x;
 }
 

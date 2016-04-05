@@ -79,7 +79,7 @@ int navire_coule(Maillon *m, int ic, int jc, Grille gc);
 /**
  * Renvoie 1 si un navire de la liste l est coulé par un tir en (ic,jc)
  * ---------------------------------------------------------------------
- * Cela se faitpar un parcoursde la liste en appelant la fonction 
+ * Cela se fait par un parcours de la liste en appelant la fonction 
  * ci-dessus
  */
 int un_navire_coule(Liste_Navires l, int ic, int jc, Grille gc);
