@@ -6,6 +6,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define BLOC printf("██")
+#define couleur(param) printf("\033[%sm",param)
+
 typedef char **Grille;
 
  int afficher_jeu(Grille g, int taille){
@@ -52,9 +55,16 @@ typedef char **Grille;
 	for (i = 0; i < taille; i++){
 		printf("%2d ",i); // indice de ligne
 		for (j = 0; j < taille; j++){
-			printf("%c ",g[i][j]); // Affiche le contenu de la grille (qui est déjà T,X,C ou ' ')
+			switch (g[i][j]) {
+				case 'T': couleur("31"); break; //Couleur rouge pour les cases touchées
+				case 'X': couleur("34"); break; //Couleur bleue pour les cases où rien ne se passe
+				case 'C': couleur("30"); break; //Couleur noire pour les cases coulées
+				default : couleur("36"); 		//Couleur cyan pour les cases non testées
+			}
+			BLOC;
 		}
 		printf("\n");
+		couleur("0"); //Reset la couleur 
 	}
 	return 0;
  }

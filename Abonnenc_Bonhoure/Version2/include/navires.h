@@ -15,7 +15,7 @@ typedef struct _Liste_Navires Liste_Navires;
  * 1 booléen indiquant si le navire est coulé (1) ou non (0)
  */ 
 typedef struct _Maillon {
-	int32_t infos;
+	int32_t *infos;
 	Maillon *suivant;
 } Maillon;
 
