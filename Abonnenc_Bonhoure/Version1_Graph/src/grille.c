@@ -65,8 +65,8 @@ typedef char **Grille;
 			BLOC;
 		}
 		printf("\n");
+		couleur("0");
 	}
-	couleur("0");
 	return 0;
  }
  
